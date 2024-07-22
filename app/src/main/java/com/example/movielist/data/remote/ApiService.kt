@@ -2,6 +2,7 @@ package com.example.movielist.data.remote
 
 import com.example.movielist.domain.model.Movie
 import com.example.movielist.domain.model.MoviesResponse
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -11,24 +12,24 @@ interface ApiService {
     suspend fun getPopularMovies(
         @Query("page") page: Int,
         @Query("api_key") apiKey: String = "76eb6eb9b0298c83768d6225a3b980ec",
-    ) : MoviesResponse
+    ) : Response<MoviesResponse>
 
     @GET("movie/top_rated")
-    fun getTopRatedMovies(
+    suspend fun getTopRatedMovies(
         @Query("page") page: Int,
         @Query("api_key") apiKey: String = "76eb6eb9b0298c83768d6225a3b980ec",
-    ): MoviesResponse
+    ): Response<MoviesResponse>
 
     @GET("search/movie")
-    fun getMoviesSearch(
+    suspend fun getMoviesSearch(
         @Query("query") query: String,
         @Query("page") page: Int,
         @Query("api_key") apiKey: String = "76eb6eb9b0298c83768d6225a3b980ec",
-    ) : MoviesResponse
+    ) : Response<MoviesResponse>
 
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(
-        @Path("movie_id") movieId: Int,
+        @Path("movie_id") movieId: Long,
         @Query("api_key") apiKey: String = "76eb6eb9b0298c83768d6225a3b980ec",
-    ) : Movie
+    ) : Response<Movie>
 }

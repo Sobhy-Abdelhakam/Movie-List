@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.MovieList" parent="Base.Theme.MovieList" />
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#A5A5A5</item>
+        <item name="colorControlActivated">#FDC92C</item>
+    </style>
 </resources>

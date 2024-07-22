@@ -9,10 +9,10 @@ import com.example.movielist.domain.entities.MovieEntity
 @Dao
 interface MovieDao {
     @Query("SELECT * FROM movies")
-    suspend fun getAllMovies(): List<MovieEntity>
+    fun getAllMovies(): List<MovieEntity>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovies(movies: List<MovieEntity>)
+    fun insertMovies(movies: List<MovieEntity>)
 
     @Query("DELETE FROM movies")
-    suspend fun deleteAllMovies()
+    fun deleteAllMovies()
 }
