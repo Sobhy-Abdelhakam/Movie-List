@@ -46,7 +46,7 @@ class SearchFragment : Fragment(), ItemClickListener {
                 binding.searchProgressBar.visibility = View.GONE
                 binding.searchNoResultTextView.visibility = View.GONE
                 binding.searchRecyclerView.visibility = View.VISIBLE
-                binding.searchRecyclerView.adapter = PopularRVAdapter(it.search, this)
+                binding.searchRecyclerView.adapter = PopularRVAdapter(this)
                 binding.searchRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
             }
         }

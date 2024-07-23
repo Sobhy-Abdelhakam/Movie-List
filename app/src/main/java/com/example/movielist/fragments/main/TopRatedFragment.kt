@@ -42,7 +42,7 @@ class TopRatedFragment : Fragment(), ItemClickListener {
                 binding.progressToprateMovie.visibility = View.GONE
                 binding.tvErrorToprateMovies.visibility = View.GONE
                 binding.rvToprateMovies.visibility = View.VISIBLE
-                binding.rvToprateMovies.adapter = PopularRVAdapter(it.topRatedMovies, this)
+                binding.rvToprateMovies.adapter = PopularRVAdapter(this)
                 binding.rvToprateMovies.layoutManager = GridLayoutManager(requireContext(), 2)
             }
         }

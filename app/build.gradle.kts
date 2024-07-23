@@ -66,10 +66,14 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+    // Room Paging
+    implementation ("androidx.room:room-paging:2.6.1")
     // navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    // paging
+    implementation("androidx.paging:paging-runtime-ktx:3.3.0")
 
 }
 // Allow references to generated code

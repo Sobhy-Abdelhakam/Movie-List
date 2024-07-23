@@ -1,5 +1,8 @@
 package com.example.movielist.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.movielist.data.remote.ApiService
 import com.example.movielist.domain.model.Movie
 import com.example.movielist.domain.model.MoviesResponse
@@ -8,17 +11,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class MovieRepositoryImpl(private val apiService: ApiService): MovieRepository {
-    override suspend fun getPopularMovies(): Flow<Result<MoviesResponse>> {
-        return flow {
-            val response = apiService.getPopularMovies(1)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    emit(Result.success(it))
-                } ?: emit(Result.failure(Exception("Response body is null")))
-            } else {
-                emit(Result.failure(Exception(response.message())))
-            }
-        }
+    override fun getPopularMovies(): Flow<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = { PopularRemotePagingSource(apiService) }
+        ).flow
     }
 
     override suspend fun getTopRatedMovies(): Flow<Result<MoviesResponse>> {

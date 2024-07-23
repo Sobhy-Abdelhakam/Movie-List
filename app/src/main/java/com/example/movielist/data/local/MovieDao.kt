@@ -1,5 +1,6 @@
 package com.example.movielist.data.local
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -15,4 +16,7 @@ interface MovieDao {
 
     @Query("DELETE FROM movies")
     fun deleteAllMovies()
+
+    @Query("SELECT * FROM movies")
+    fun pagingSource(): PagingSource<Int, MovieEntity>
 }

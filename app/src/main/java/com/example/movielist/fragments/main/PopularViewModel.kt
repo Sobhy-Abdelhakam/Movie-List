@@ -1,9 +1,12 @@
 package com.example.movielist.fragments.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.movielist.domain.model.Movie
 import com.example.movielist.domain.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,8 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PopularViewModel @Inject constructor(private val repository: MovieRepository): ViewModel() {
-    private val _popularMovies = MutableLiveData<PopularState>()
-    val popularMovies: LiveData<PopularState> = _popularMovies
+    private val _popularMovies = MutableLiveData<MovieState>()
+    val popularMovies: LiveData<MovieState> = _popularMovies
 
     private val _topRatedMovies = MutableLiveData<TopRatedState>()
     val topRatedMovies: LiveData<TopRatedState> = _topRatedMovies
@@ -24,19 +27,18 @@ class PopularViewModel @Inject constructor(private val repository: MovieReposito
         getTopRatedMovies()
     }
     private fun getPopularMovies() {
-        _popularMovies.value = PopularState(loading = true)
+        _popularMovies.value = MovieState.Loading
         viewModelScope.launch {
             try {
-                val movies = repository.getPopularMovies()
-                movies.collectLatest { result ->
-                    if (result.isSuccess){
-                        _popularMovies.value = PopularState(popularMovies = result.getOrNull()?.movies ?: emptyList())
-                    } else {
-                        _popularMovies.value = PopularState(error = result.exceptionOrNull()?.localizedMessage ?: "An error occurred")
+                repository.getPopularMovies()
+                    .cachedIn(viewModelScope)
+                    .collect{
+                        _popularMovies.value = MovieState.Success(it)
+                        Log.d("MovieViewModel", "Success: Data fetched")
                     }
-                }
             } catch (e: Exception) {
-                _popularMovies.value = PopularState(error = e.localizedMessage ?: "An error occurred")
+                _popularMovies.value = MovieState.Error(e.message ?: "Unknown error")
+                Log.d("MovieViewModel", "Error: ${e.message}")
             }
         }
     }
@@ -60,10 +62,15 @@ class PopularViewModel @Inject constructor(private val repository: MovieReposito
 }
 
 data class PopularState(
-    val popularMovies: List<Movie> = emptyList(),
+    val popularMovies: PagingData<Movie>? = null,
     val error: String = "",
     val loading: Boolean = false
 )
+sealed class MovieState {
+    object Loading : MovieState()
+    data class Success(val data: PagingData<Movie>) : MovieState()
+    data class Error(val message: String) : MovieState()
+}
 data class TopRatedState(
     val topRatedMovies: List<Movie> = emptyList(),
     val error: String = "",
