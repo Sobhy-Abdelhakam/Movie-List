@@ -1,6 +1,5 @@
 package com.example.movielist.fragments.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,11 +33,9 @@ class PopularViewModel @Inject constructor(private val repository: MovieReposito
                     .cachedIn(viewModelScope)
                     .collect{
                         _popularMovies.value = MovieState.Success(it)
-                        Log.d("MovieViewModel", "Success: Data fetched")
                     }
             } catch (e: Exception) {
                 _popularMovies.value = MovieState.Error(e.message ?: "Unknown error")
-                Log.d("MovieViewModel", "Error: ${e.message}")
             }
         }
     }
@@ -48,11 +45,7 @@ class PopularViewModel @Inject constructor(private val repository: MovieReposito
             try {
                 val movies = repository.getTopRatedMovies()
                 movies.collectLatest { result ->
-                    if (result.isSuccess){
-                        _topRatedMovies.value = TopRatedState(topRatedMovies = result.getOrNull()?.movies ?: emptyList())
-                    } else {
-                        _topRatedMovies.value = TopRatedState(error = result.exceptionOrNull()?.localizedMessage ?: "An error occurred")
-                    }
+                    _topRatedMovies.value = TopRatedState(topRatedMovies = result)
                 }
             } catch (e: Exception) {
                 _topRatedMovies.value = TopRatedState(error = e.localizedMessage ?: "An error occurred")
@@ -61,18 +54,13 @@ class PopularViewModel @Inject constructor(private val repository: MovieReposito
     }
 }
 
-data class PopularState(
-    val popularMovies: PagingData<Movie>? = null,
-    val error: String = "",
-    val loading: Boolean = false
-)
 sealed class MovieState {
-    object Loading : MovieState()
+    data object Loading : MovieState()
     data class Success(val data: PagingData<Movie>) : MovieState()
     data class Error(val message: String) : MovieState()
 }
 data class TopRatedState(
-    val topRatedMovies: List<Movie> = emptyList(),
+    val topRatedMovies: PagingData<Movie>? = null,
     val error: String = "",
     val loading: Boolean = false
 )

@@ -4,17 +4,17 @@ import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 
-class PopularLoadStateAdapter(
+class MoviesLoadStateAdapter(
     private val retry: () -> Unit
-): LoadStateAdapter<PopularLoadStateViewHolder>() {
-    override fun onBindViewHolder(holder: PopularLoadStateViewHolder, loadState: LoadState) {
+): LoadStateAdapter<MoviesLoadStateViewHolder>() {
+    override fun onBindViewHolder(holder: MoviesLoadStateViewHolder, loadState: LoadState) {
         holder.bind(loadState)
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         loadState: LoadState,
-    ): PopularLoadStateViewHolder {
-        return PopularLoadStateViewHolder.create(parent, retry)
+    ): MoviesLoadStateViewHolder {
+        return MoviesLoadStateViewHolder.create(parent, retry)
     }
 }

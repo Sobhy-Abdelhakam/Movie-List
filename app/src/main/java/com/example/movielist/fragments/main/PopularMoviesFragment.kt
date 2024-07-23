@@ -10,23 +10,21 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movielist.R
 import com.example.movielist.adapters.ItemClickListener
-import com.example.movielist.adapters.PopularLoadStateAdapter
-import com.example.movielist.adapters.PopularRVAdapter
+import com.example.movielist.adapters.MoviesLoadStateAdapter
+import com.example.movielist.adapters.MoviesRVAdapter
 import com.example.movielist.databinding.FragmentPopularMoviesBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PopularMoviesFragment : Fragment(), ItemClickListener {
     private lateinit var binding : FragmentPopularMoviesBinding
     private val viewModel : PopularViewModel by viewModels()
-    private val adapter by lazy { PopularRVAdapter(this) }
+    private val adapter by lazy { MoviesRVAdapter(this) }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -39,8 +37,8 @@ class PopularMoviesFragment : Fragment(), ItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         binding.rvPopularMovies.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPopularMovies.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = PopularLoadStateAdapter { adapter.retry() },
-            footer = PopularLoadStateAdapter { adapter.retry() }
+            header = MoviesLoadStateAdapter { adapter.retry() },
+            footer = MoviesLoadStateAdapter { adapter.retry() }
         )
         adapter.addLoadStateListener { loadState ->
             binding.rvPopularMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
@@ -76,26 +74,6 @@ class PopularMoviesFragment : Fragment(), ItemClickListener {
                 }
             }
         }
-
-//        viewModel.popularMovies.observe(viewLifecycleOwner) {
-//            if (it.loading){
-//                binding.progressPopularMovie.visibility = View.VISIBLE
-//                binding.tvErrorPopularMovies.visibility = View.GONE
-//                binding.rvPopularMovies.visibility = View.GONE
-//            } else if (it.error.isNotBlank()){
-//                binding.progressPopularMovie.visibility = View.GONE
-//                binding.tvErrorPopularMovies.visibility = View.VISIBLE
-//                binding.tvErrorPopularMovies.text = it.error
-//                binding.rvPopularMovies.visibility = View.GONE
-//            } else {
-//                binding.progressPopularMovie.visibility = View.GONE
-//                binding.tvErrorPopularMovies.visibility = View.GONE
-//                binding.rvPopularMovies.visibility = View.VISIBLE
-//                lifecycleScope.launch {
-//                    adapter.submitData(it.popularMovies!!)
-//                }
-//            }
-//        }
     }
 
     override fun onItemClick(movieId: Long) {

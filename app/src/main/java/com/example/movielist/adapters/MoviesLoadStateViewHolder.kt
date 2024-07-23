@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.movielist.R
 import com.example.movielist.databinding.ItemLoadStateBinding
 
-class PopularLoadStateViewHolder(
+class MoviesLoadStateViewHolder(
     private val binding: ItemLoadStateBinding,
     retry: () -> Unit
 ): RecyclerView.ViewHolder(binding.root) {
@@ -16,7 +16,7 @@ class PopularLoadStateViewHolder(
         binding.retryButton.setOnClickListener { retry.invoke() }
     }
     companion object {
-        fun create(parent: ViewGroup, retry: () -> Unit): PopularLoadStateViewHolder {
+        fun create(parent: ViewGroup, retry: () -> Unit): MoviesLoadStateViewHolder {
             val binding = ItemLoadStateBinding.bind(
                 LayoutInflater.from(parent.context).inflate(
                     R.layout.item_load_state,
@@ -24,7 +24,7 @@ class PopularLoadStateViewHolder(
                     false
                 )
             )
-            return PopularLoadStateViewHolder(binding, retry)
+            return MoviesLoadStateViewHolder(binding, retry)
         }
     }
     fun bind(loadState: LoadState){
